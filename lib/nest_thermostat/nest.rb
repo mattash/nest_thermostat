@@ -62,6 +62,14 @@ module NestThermostat
     def humidity
       status["device"][self.device_id]["current_humidity"]
     end
+    
+    def hot_water_active
+      status["device"][self.device_id]["hot_water_active"]
+    end
+    
+    def is_heating
+      status["shared"][self.device_id]["hvac_heater_state"]
+    end
 
     def current_temperature
       convert_temp_for_get(status["shared"][self.device_id]["current_temperature"])
