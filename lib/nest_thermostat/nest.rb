@@ -54,6 +54,11 @@ module NestThermostat
 
       @status = result
     end
+    
+    def refresh_cache
+      @status = nil
+      status
+    end
 
     def public_ip
       status["track"][self.device_id]["last_ip"].strip
