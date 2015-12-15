@@ -36,19 +36,23 @@ module NestThermostat
         'Connection'            => 'keep-alive',
         'Accept'                => '*/*'
       }
+      
+      @status         = nil
 
       # Set device and structure id
       status
     end
 
     def status
+      return @status unless @status.nil?
+      
       request = HTTParty.get("#{self.transport_url}/v2/mobile/user.#{self.user_id}", headers: self.headers) rescue nil
       result = JSON.parse(request.body) rescue nil
 
       self.structure_id = result['user'][user_id]['structures'][0].split('.')[1]
       self.device_id    = result['structure'][structure_id]['devices'][0].split('.')[1]
 
-      result
+      @status = result
     end
 
     def public_ip
@@ -99,6 +103,8 @@ module NestThermostat
         body: %Q({"target_change_pending":true,"target_temperature":#{degrees}}),
         headers: self.headers
       ) rescue nil
+      @status = nil unless request.nil?
+      request
     end
     alias_method :temp=, :temperature=
 
@@ -110,6 +116,8 @@ module NestThermostat
           body: %Q({"target_change_pending":true,"target_temperature_low":#{degrees}}),
           headers: self.headers
       ) rescue nil
+      @status = nil unless request.nil?
+      request
     end
     alias_method :temp_low=, :temperature_low=
 
@@ -121,6 +129,8 @@ module NestThermostat
           body: %Q({"target_change_pending":true,"target_temperature_high":#{degrees}}),
           headers: self.headers
       ) rescue nil
+      @status = nil unless request.nil?
+      request
     end
     alias_method :temp_high=, :temperature_high=
 
@@ -140,6 +150,8 @@ module NestThermostat
         body: %Q({"away_timestamp":#{Time.now.to_i},"away":#{!!state},"away_setter":0}),
         headers: self.headers
       ) rescue nil
+      @status = nil unless request.nil?
+      request
     end
 
     def temperature_scale=(scale)
@@ -161,6 +173,8 @@ module NestThermostat
         body: %Q({"fan_mode":"#{state}"}),
         headers: self.headers
       ) rescue nil
+      @status = nil unless request.nil?
+      request
     end
 
     def method_missing(name, *args, &block)
