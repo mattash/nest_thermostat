@@ -87,7 +87,7 @@ module NestThermostat
 
     def temperature
       if away?
-        convert_temp_for_get(status["shared"][self.device_id]['away_temperature_low']
+        convert_temp_for_get(status["shared"][self.device_id]['away_temperature_low'])
       else
         convert_temp_for_get(status["shared"][self.device_id]["target_temperature"])
       end
