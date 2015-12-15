@@ -14,7 +14,7 @@ Gem::Specification.new do |gem|
   gem.name          = "nest_thermostat"
   gem.require_paths = ["lib"]
   gem.version       = NestThermostat::VERSION
-  gem.add_dependency "httparty", "~> 0.8.3"
+  gem.add_dependency "httparty", "~> 0.11.0"
 
   gem.add_development_dependency "rspec", "~> 3.1"
   gem.add_development_dependency "awesome_print"
