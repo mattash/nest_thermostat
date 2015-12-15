@@ -86,7 +86,11 @@ module NestThermostat
     alias_method :current_temp, :current_temperature
 
     def temperature
-      convert_temp_for_get(status["shared"][self.device_id]["target_temperature"])
+      if away?
+        convert_temp_for_get(status["shared"][self.device_id]['away_temperature_low']
+      else
+        convert_temp_for_get(status["shared"][self.device_id]["target_temperature"])
+      end
     end
     alias_method :temp, :temperature
 
