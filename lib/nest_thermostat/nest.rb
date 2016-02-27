@@ -162,9 +162,9 @@ module NestThermostat
       @status = nil unless request.nil?
       request
     end
-
+    
     def temperature_scale=(scale)
-      if %i[kelvin celsius fahrenheit].include?(scale)
+      if [:kelvin ,:celsius, :fahrenheit].include?(scale)
         @temperature_scale = scale
       else
         raise ArgumentError, "#{scale} is not a valid temperature scale"
@@ -187,7 +187,7 @@ module NestThermostat
     end
 
     def method_missing(name, *args, &block)
-      if %i[away leaf].include?(name)
+      if [:away, :leaf].include?(name)
         warn "`#{name}' has been replaced with `#{name}?'. Support for " +
              "`#{name}' without the '?' will be dropped in future versions."
         return self.send("#{name}?", *args)
