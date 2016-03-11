@@ -36,7 +36,7 @@ module NestThermostat
         'Connection'            => 'keep-alive',
         'Accept'                => '*/*'
       }
-      
+
       @status         = nil
 
       # Set device and structure id
@@ -45,16 +45,24 @@ module NestThermostat
 
     def status
       return @status unless @status.nil?
-      
+
       request = HTTParty.get("#{self.transport_url}/v2/mobile/user.#{self.user_id}", headers: self.headers) rescue nil
       result = JSON.parse(request.body) rescue nil
 
       self.structure_id = result['user'][user_id]['structures'][0].split('.')[1]
-      self.device_id    = result['structure'][structure_id]['devices'][0].split('.')[1]
+      set_device result['structure'][structure_id]['devices'][0]
 
       @status = result
     end
-    
+
+    def set_device(device)
+      self.device_id = device.split('.')[1]
+    end
+
+    def get_devices
+      status["structure"][structure_id]["devices"]
+    end
+
     def refresh_cache
       @status = nil
       status
@@ -71,11 +79,11 @@ module NestThermostat
     def humidity
       status["device"][self.device_id]["current_humidity"]
     end
-    
+
     def hot_water_active
       status["device"][self.device_id]["hot_water_active"]
     end
-    
+
     def is_heating
       status["shared"][self.device_id]["hvac_heater_state"]
     end

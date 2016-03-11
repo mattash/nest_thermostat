@@ -27,6 +27,15 @@ module NestThermostat
       expect(@nest.status['device'].first[1]['mac_address']).to match(/(\d|[a-f]|[A-F])+/)
     end
 
+
+    it "gets the devices" do
+      expect(@nest.get_devices).to be_a_kind_of(Array)
+    end
+
+    it "sets the device" do
+      expect(@nest.set_device(@nest.get_devices[1])).to eql(@nest.device_id)
+    end
+
     it "gets the pubic ip address" do
       expect(@nest.public_ip).to match(/^(\d{1,3}\.\d{1,3}\.\d{1,3}\.\d{1,3})?$/)
     end
